@@ -13,7 +13,8 @@ namespace Minsk{
         EndOfFileToken,
         NumberExpression,
         BinaryExpression,
-        ParenthesisExpression
+        ParenthesisExpression,
+        LiteralExpression
     }
 
 }
