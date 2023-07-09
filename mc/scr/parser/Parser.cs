@@ -30,38 +30,43 @@ namespace Minsk
             _diagnostic.AddRange(lexer.Diagnostics);
         }
 
-        private SyntaxToken Peek(int offset) {
+        private SyntaxToken Peek(int offset)
+        {
             var index = _position + offset;
-            if(index >= _tokens.Length) {
-                return _tokens[_tokens.Length -1];
+            if (index >= _tokens.Length)
+            {
+                return _tokens[_tokens.Length - 1];
             }
             return _tokens[index];
         }
         private SyntaxToken Current => Peek(0);
 
-        private SyntaxToken NextToken() {
+        private SyntaxToken NextToken()
+        {
             var current = Current;
             _position++;
             return current;
         }
 
-        private SyntaxToken Match(SyntaxKind kind) {
-            if(Current.Kind == kind)
+        private SyntaxToken MatchToken(SyntaxKind kind)
+        {
+            if (Current.Kind == kind)
                 return NextToken();
             _diagnostic.Add($"Error: Unexpected Token <{Current.Kind}> expected <{kind}>");
-            return new SyntaxToken(kind,Current.Position,null,null);
+            return new SyntaxToken(kind, Current.Position, null, null);
         }
 
         public SyntaxTree Parse()
         {
-            var expression = ParseTerm();
-            var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
+            var expression = ParesExpression();
+            var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
 
             return new SyntaxTree(_diagnostic, expression, endOfFileToken);
 
         }
 
-        private ExpressionSyntax ParesExpression() {
+        private ExpressionSyntax ParesExpression()
+        {
             return ParseTerm();
         }
         // Recursive Decent Parser
@@ -69,7 +74,7 @@ namespace Minsk
         {
             var left = ParseFactor();
 
-            while (Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken )
+            while (Current.Kind == SyntaxKind.PlusToken || Current.Kind == SyntaxKind.MinusToken)
             {
                 var operatorToken = NextToken();
                 var right = ParseFactor();
@@ -78,11 +83,11 @@ namespace Minsk
             return left;
         }
 
-          private ExpressionSyntax ParseFactor()
+        private ExpressionSyntax ParseFactor()
         {
             var left = ParsePrimaryExpression();
 
-            while (Current.Kind == SyntaxKind.SlashToken || Current.Kind == SyntaxKind.StarToken )
+            while (Current.Kind == SyntaxKind.SlashToken || Current.Kind == SyntaxKind.StarToken)
             {
                 var operatorToken = NextToken();
                 var right = ParsePrimaryExpression();
@@ -93,14 +98,15 @@ namespace Minsk
 
         private ExpressionSyntax ParsePrimaryExpression()
         {
-            if(Current.Kind == SyntaxKind.OpenParenthesisToken) {
+            if (Current.Kind == SyntaxKind.OpenParenthesisToken)
+            {
                 var left = NextToken();
                 var expression = ParesExpression();
-                var right = Match(SyntaxKind.CloseParenthesisToken);
-                return  new ParenthesizedExpressionSyntax(left,expression,right);
+                var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+                return new ParenthesizedExpressionSyntax(left, expression, right);
             }
-            var numberToken = Match(SyntaxKind.NumberToken);
-            return new NumberExpressionSyntax(numberToken);
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
         }
     }
 

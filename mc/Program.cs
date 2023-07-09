@@ -32,14 +32,10 @@ namespace Minsk
                 var syntaxTree = SyntaxTree.Parse(line);
                 if (showTree)
                 {
-                    var color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     PrittyPrint(syntaxTree.Root);
-                    Console.ForegroundColor = color;
-
+                    Console.ResetColor();
                 }
-
-
                 if (!syntaxTree.Diagnostics.Any())
                 {
                     var e = new Evaluator(syntaxTree.Root);
@@ -49,14 +45,13 @@ namespace Minsk
                 }
                 else
                 {
-                    var color = Console.ForegroundColor;
-
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     foreach (var error in syntaxTree.Diagnostics)
                     {
                         Console.WriteLine(error);
                     }
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
+
                 }
             }
         }

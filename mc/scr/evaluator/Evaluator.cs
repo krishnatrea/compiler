@@ -17,9 +17,9 @@ namespace Minsk
         private int EvaluateExpression(ExpressionSyntax root)
         {
 
-            if (root is NumberExpressionSyntax n)
+            if (root is LiteralExpressionSyntax n)
             {
-                return (int)n.NumberToken.Value;
+                return (int)n.LiteralToken.Value;
             }
 
             if (root is BinaryExpressionSyntax b)
