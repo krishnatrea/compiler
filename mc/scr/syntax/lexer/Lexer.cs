@@ -1,5 +1,5 @@
-
-namespace Minsk {
+namespace Minsk.Syntax
+{
 
     class Lexer {
         private readonly string _text;

@@ -1,4 +1,5 @@
-namespace Minsk{
+namespace Minsk.Syntax
+{
 
     enum SyntaxKind {
         NumberToken,

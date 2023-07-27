@@ -1,5 +1,5 @@
 
-namespace Minsk
+namespace Minsk.Syntax
 {
     internal static class SyntaxFacts {
 

@@ -1,4 +1,5 @@
-namespace Minsk{
+namespace Minsk.Syntax
+{
 
     class SyntaxToken : SyntaxNode {
 

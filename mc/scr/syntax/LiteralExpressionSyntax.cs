@@ -1,4 +1,4 @@
-namespace Minsk
+namespace Minsk.Syntax
 {
 
     class LiteralExpressionSyntax : ExpressionSyntax

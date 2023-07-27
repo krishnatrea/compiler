@@ -1,5 +1,5 @@
 
-namespace Minsk
+namespace Minsk.Syntax
 {
     sealed class SyntaxTree
     {

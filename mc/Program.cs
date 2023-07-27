@@ -1,4 +1,5 @@
 ﻿using System;
+using Minsk.Syntax;
 
 namespace Minsk
 {
