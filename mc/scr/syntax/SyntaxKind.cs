@@ -14,7 +14,8 @@ namespace Minsk{
         NumberExpression,
         BinaryExpression,
         ParenthesisExpression,
-        LiteralExpression
+        LiteralExpression,
+        UnaryExpression
     }
 
 }

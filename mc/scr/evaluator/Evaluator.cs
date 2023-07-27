@@ -14,15 +14,31 @@ namespace Minsk
             return EvaluateExpression(_root);
         }
 
-        private int EvaluateExpression(ExpressionSyntax root)
+        private int EvaluateExpression(ExpressionSyntax node)
         {
 
-            if (root is LiteralExpressionSyntax n)
+            if (node is LiteralExpressionSyntax n)
             {
                 return (int)n.LiteralToken.Value;
             }
 
-            if (root is BinaryExpressionSyntax b)
+            if(node is UnaryExpressionSyntax u) {
+
+                var operand = EvaluateExpression(u.Operand);
+
+                if(u.OperatorToken.Kind == SyntaxKind.MinusToken) {
+                    return -operand;
+                }
+
+                else if(u.OperatorToken.Kind == SyntaxKind.PlusToken) {
+                    return operand;
+                } else {
+                    throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}");
+                }
+
+            }
+
+            if (node is BinaryExpressionSyntax b)
             {
 
                 var left = EvaluateExpression(b.Left);
@@ -51,11 +67,11 @@ namespace Minsk
 
             }
 
-            if(root is ParenthesizedExpressionSyntax p) {
+            if(node is ParenthesizedExpressionSyntax p) {
                 return EvaluateExpression(p.Expression);
             }
 
-            throw new Exception($"Unexpected node {root.Kind}");
+            throw new Exception($"Unexpected node {node.Kind}");
 
 
         }
