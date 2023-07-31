@@ -1,3 +1,6 @@
 {
-    "sol.debug.AutoBreakOnSignal": true
+    "sol.debug.AutoBreakOnSignal": true,
+    "cSpell.words": [
+        "Pritty"
+    ]
 }

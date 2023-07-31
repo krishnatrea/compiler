@@ -1,4 +1,5 @@
 ﻿using System;
+using Minsk.Binding;
 using Minsk.Syntax;
 
 namespace Minsk
@@ -31,15 +32,20 @@ namespace Minsk
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
+                var binder = new Binder();
+                var boundExpression = binder.BindExpression(syntaxTree.Root);
+                IReadOnlyList<string> diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+
                 if (showTree)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     PrittyPrint(syntaxTree.Root);
                     Console.ResetColor();
                 }
-                if (!syntaxTree.Diagnostics.Any())
+
+                if (!diagnostics.Any())
                 {
-                    var e = new Evaluator(syntaxTree.Root);
+                    var e = new Evaluator(boundExpression);
                     var result = e.Evaluate();
                     Console.WriteLine(result);
 

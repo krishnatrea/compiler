@@ -1,77 +1,71 @@
+using Minsk.Binding;
 using Minsk.Syntax;
 
 namespace Minsk
 {
-    class Evaluator
+    internal sealed class Evaluator
     {
-        public Evaluator(ExpressionSyntax root)
+        public Evaluator(BoundExpression root)
         {
             _root = root;
         }
 
-        public readonly ExpressionSyntax _root;
+        public readonly BoundExpression _root;
 
         public int Evaluate()
         {
             return EvaluateExpression(_root);
         }
 
-        private int EvaluateExpression(ExpressionSyntax node)
+        private int EvaluateExpression(BoundExpression node)
         {
 
-            if (node is LiteralExpressionSyntax n)
+            if (node is BoundLiteralExpression n)
             {
-                return (int)n.LiteralToken.Value;
+                return (int)n.Value;
             }
 
-            if(node is UnaryExpressionSyntax u) {
+            if(node is BoundUnaryExpression u) {
 
                 var operand = EvaluateExpression(u.Operand);
 
-                if(u.OperatorToken.Kind == SyntaxKind.MinusToken) {
+                if(u.OperatorKind == BoundUnaryOperatorKind.Negation) {
                     return -operand;
                 }
 
-                else if(u.OperatorToken.Kind == SyntaxKind.PlusToken) {
+                else if(u.OperatorKind == BoundUnaryOperatorKind.Identity) {
                     return operand;
                 } else {
-                    throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}");
+                    throw new Exception($"Unexpected unary operator {u.OperatorKind}");
                 }
 
             }
 
-            if (node is BinaryExpressionSyntax b)
+            if (node is BoundBinaryExpression b)
             {
 
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);
 
-                if (b.OperatorToken.Kind == SyntaxKind.PlusToken)
+                switch (b.OperatorKind)
                 {
-                    return left + right;
-                }
-                else if (b.OperatorToken.Kind == SyntaxKind.MinusToken)
-                {
-                    return left - right;
-                }
-                else if (b.OperatorToken.Kind == SyntaxKind.SlashToken)
-                {
-                    return left / right;
-                }
-                else if (b.OperatorToken.Kind == SyntaxKind.StarToken)
-                {
-                    return left * right;
-                }
-                else
-                {
-                    throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}");
+                    case BoundBinaryOperatorKind.Addition:
+                        return left + right;
+                    case BoundBinaryOperatorKind.Subtraction:
+                        return left - right;
+                    case BoundBinaryOperatorKind.Division:
+                        return left / right;
+                    case BoundBinaryOperatorKind.Multiplication:
+                        return left * right;
+                    default:
+                        throw new Exception($"Unexpected binary operator {b.OperatorKind}");
                 }
 
             }
 
-            if(node is ParenthesizedExpressionSyntax p) {
-                return EvaluateExpression(p.Expression);
-            }
+            // if(node is ParenthesizedExpressionSyntax p) {
+            //     return EvaluateExpression(p.Expression);
+            // }
 
             throw new Exception($"Unexpected node {node.Kind}");
 
