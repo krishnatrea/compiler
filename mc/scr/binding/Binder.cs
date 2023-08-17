@@ -1,3 +1,4 @@
+using System.Collections;
 using Minsk.Syntax;
 
 namespace Minsk.Binding
@@ -30,7 +31,8 @@ namespace Minsk.Binding
             var boundLeft = BindExpression(syntax.Left);
             var boundRight = BindExpression(syntax.Right);
             var boundOperatorKind = BindBinaryOperatorKind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
-            if(boundOperatorKind == null) {
+            if (boundOperatorKind == null)
+            {
                 _diagnostics.Add($"Unary operator '{syntax.OperatorToken.Kind}' is not define for {boundLeft.Type} and {boundRight.Type}  ");
                 return boundLeft;
             }
@@ -41,7 +43,8 @@ namespace Minsk.Binding
         {
             var boundOperand = BindExpression(syntax.Operand);
             var boundOperatorKind = BindUnaryOperatorKind(syntax.OperatorToken.Kind, boundOperand.Type);
-             if(boundOperatorKind == null) {
+            if (boundOperatorKind == null)
+            {
                 _diagnostics.Add($"Unary operator '{syntax.OperatorToken.Kind}' is not define for {boundOperand.Type} ");
                 return boundOperand;
             }
@@ -50,46 +53,63 @@ namespace Minsk.Binding
 
         private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
         {
-            var value = syntax.LiteralToken.Value as int? ?? 0;
+            var value = syntax.Value ?? 0;
             return new BoundLiteralExpression(value);
         }
 
         private BoundUnaryOperatorKind? BindUnaryOperatorKind(SyntaxKind kind, Type operandType)
         {
-            if(operandType != typeof(int)) {
-                return null;
-            }
-            switch (kind)
+            if (operandType == typeof(int))
             {
-                case SyntaxKind.PlusToken:
-                    return BoundUnaryOperatorKind.Identity;
-                case SyntaxKind.MinusToken:
-                    return BoundUnaryOperatorKind.Negation;
-                default:
-                    throw new Exception($"Unexpected unary operator {kind}");
+                switch (kind)
+                {
+                    case SyntaxKind.PlusToken:
+                        return BoundUnaryOperatorKind.Identity;
+                    case SyntaxKind.MinusToken:
+                        return BoundUnaryOperatorKind.Negation;
+                }
             }
+
+            if(operandType == typeof(bool)) {
+                switch (kind)
+                {
+                    case SyntaxKind.BangToken:
+                        return BoundUnaryOperatorKind.LogicalNegation;
+                }
+            }
+            return null;
+
         }
 
         private BoundBinaryOperatorKind? BindBinaryOperatorKind(SyntaxKind kind, Type leftType, Type rightType)
         {
 
-            if(leftType != typeof(int) || rightType !=  typeof(int)) {
-                return null;
-            }
-
-            switch (kind)
+            if (leftType == typeof(int) && rightType == typeof(int))
             {
-                case SyntaxKind.PlusToken:
-                    return BoundBinaryOperatorKind.Addition;
-                case SyntaxKind.MinusToken:
-                    return BoundBinaryOperatorKind.Subtraction;
-                 case SyntaxKind.SlashToken:
-                    return BoundBinaryOperatorKind.Division;
-                case SyntaxKind.StarToken:
-                    return BoundBinaryOperatorKind.Multiplication;
-                default:
-                    throw new Exception($"Unexpected unary operator {kind}");
+                switch (kind)
+                {
+                    case SyntaxKind.PlusToken:
+                        return BoundBinaryOperatorKind.Addition;
+                    case SyntaxKind.MinusToken:
+                        return BoundBinaryOperatorKind.Subtraction;
+                    case SyntaxKind.SlashToken:
+                        return BoundBinaryOperatorKind.Division;
+                    case SyntaxKind.StarToken:
+                        return BoundBinaryOperatorKind.Multiplication;
+                }
             }
+            if (leftType == typeof(bool) && rightType == typeof(bool))
+            {
+                switch (kind)
+                {
+                    case SyntaxKind.AmpersendAmpersendToken:
+                        return BoundBinaryOperatorKind.LogicalAnd;
+                    case SyntaxKind.PipePipeToken:
+                        return BoundBinaryOperatorKind.LogicalOr;
+
+                }
+            }
+            return null;
         }
     }
 }

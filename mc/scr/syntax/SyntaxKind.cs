@@ -16,7 +16,13 @@ namespace Minsk.Syntax
         BinaryExpression,
         ParenthesisExpression,
         LiteralExpression,
-        UnaryExpression
+        UnaryExpression,
+        TrueKeyword,
+        FalseKeyword,
+        IdentifierToken,
+        BangToken,
+        AmpersendAmpersendToken,
+        PipePipeToken
     }
 
 }
