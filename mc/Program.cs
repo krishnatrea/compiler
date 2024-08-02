@@ -1,6 +1,6 @@
-﻿using System;
-using Minsk.Binding;
-using Minsk.Syntax;
+﻿using Minsk.CodeAnalysis;
+using Minsk.CodeAnalysis.Binding;
+using Minsk.CodeAnalysis.Syntax;
 
 namespace Minsk
 {

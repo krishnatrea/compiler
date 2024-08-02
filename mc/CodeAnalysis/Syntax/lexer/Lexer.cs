@@ -1,4 +1,4 @@
-namespace Minsk.Syntax
+namespace Minsk.CodeAnalysis.Syntax
 {
 
     class Lexer {

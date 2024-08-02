@@ -1,7 +1,7 @@
 using System.Collections;
-using Minsk.Syntax;
+using Minsk.CodeAnalysis.Syntax;
 
-namespace Minsk.Binding
+namespace Minsk.CodeAnalysis.Binding
 {
 
     internal sealed class Binder

@@ -1,4 +1,4 @@
-namespace Minsk.Binding
+namespace Minsk.CodeAnalysis.Binding
 {
     internal enum BoundBinaryOperatorKind
     {
