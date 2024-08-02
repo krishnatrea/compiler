@@ -12,7 +12,7 @@ namespace Minsk.Binding
 
         public override Type Type => Left.Type;
 
-        public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
+        public override BoundNodeKind Kind => BoundNodeKind.BinaryExpression;
 
         public BoundExpression Left { get; }
         public BoundBinaryOperatorKind OperatorKind { get; }

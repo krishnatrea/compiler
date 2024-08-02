@@ -76,7 +76,7 @@ namespace Minsk
                 Console.Write(t.Value);
             }
             Console.WriteLine();
-            indent += isLast ? "    " : "|   ";
+            indent += isLast ? "    " : "|  ";
             var lastChild = node.GetChildren().LastOrDefault();
             foreach (var child in node.GetChildren())
             {
